@@ -95,7 +95,15 @@ function get_data(db::DB, idx::Integer=0; id::Integer=-1)
     lgn = d["timestamps_ms"][findall(isequal(0), d["ids"])] .* MS2SEC
     ret = d["timestamps_ms"][findall(>(0), d["ids"])] .* MS2SEC
 
-    return ret .+ 0.158, lgn .+ 0.160
+    # some records have negative timestamps, so shift both accordingly (plus
+    # 100ms so we don't have any timestamps at exactly 0)
+    t0 = min(minimum(ret), minimum(lgn))
+    t0 = t0 < 0 ? abs(t0) + 0.1 : 0.1
+
+    # retina recordins are S-potentials, so they do NOT include conduction
+    # delays, thus we shift the LGN timestamps forwards by 2ms (relative to the
+    # retina) to avoid any weirdness that the short delay may introduce
+    return ret .+ t0, lgn .+ (t0 + 0.002)
 end
 # ============================================================================ #
 end
