@@ -11,7 +11,7 @@ const DATEDICT = Dict{Vector{String}, Int}(
     ["fe", "feb", "february"]  => 02,
     ["ma", "mar", "march"]     => 03,
     ["ap", "apr", "april"]     => 04,
-    ["ma", "may", "march"]     => 05,
+    ["may"]                    => 05,
     ["ju", "jun", "june"]      => 06,
     ["jl", "jul", "july"]      => 07,
     ["au", "aug", "august"]    => 08,
@@ -100,7 +100,7 @@ function get_data(db::DB, idx::Integer=0; id::Integer=-1)
     t0 = min(minimum(ret), minimum(lgn))
     t0 = t0 < 0 ? abs(t0) + 0.1 : 0.1
 
-    # retina recordins are S-potentials, so they do NOT include conduction
+    # retina recordings are S-potentials, so they do NOT include conduction
     # delays, thus we shift the LGN timestamps forwards by 2ms (relative to the
     # retina) to avoid any weirdness that the short delay may introduce
     return ret .+ t0, lgn .+ (t0 + 0.002)
