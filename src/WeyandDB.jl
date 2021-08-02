@@ -101,9 +101,12 @@ function get_data(db::DB, idx::Integer=0; id::Integer=-1)
     t0 = t0 < 0 ? abs(t0) + 0.1 : 0.1
 
     # retina recordings are S-potentials, so they do NOT include conduction
-    # delays, thus we shift the LGN timestamps forwards by 2ms (relative to the
-    # retina) to avoid any weirdness that the short delay may introduce
-    return ret .+ t0, lgn .+ (t0 + 0.002)
+    # delays, thus we shift the retinal timestamps backwards by 2.4 ms (relative
+    # to the LGN) to avoid any weirdness that the short delay may introduce
+    # NOTE: 2.4 ms is the shifte required to match the median
+    # S-potential -> LGN delay (0.4 ms) to the median RGC->LGN delay from
+    # PairsDB (2.8 ms)
+    return ret .+ (t0 - 0.0024), lgn .+ t0
 end
 # ============================================================================ #
 end
