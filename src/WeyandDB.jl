@@ -90,9 +90,9 @@ function get_data(db::DB, idx::Integer=0; id::Integer=-1)
         file = db[id=id].second
     end
 
-    d = CSV.parse(file, ',', [Float64, Float64])
+    d = CSV.parse(file, ',', [Float64, Int])
 
-    lgn = d["timestamps_ms"][findall(<(1), d["ids"])] .* MS2SEC
+    lgn = d["timestamps_ms"][findall(isequal(0), d["ids"])] .* MS2SEC
     ret = d["timestamps_ms"][findall(>(0), d["ids"])] .* MS2SEC
 
     # some records have negative timestamps, so shift both accordingly (plus
